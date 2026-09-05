@@ -6,7 +6,7 @@
 
 **A complete Verus Coin (VRSC) mining solution for Android devices using Termux**
 
-[![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/yourusername/verus-miner-termux)
+[![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/karolek13245/Verus-Miner)
 [![Termux](https://img.shields.io/badge/Termux-Compatible-green.svg)](https://termux.com)
 [![License](https://img.shields.io/badge/license-MIT-red.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android-orange.svg)](https://android.com)
@@ -23,8 +23,10 @@
 - [Installation](#-installation)
 - [Configuration](#-configuration)
 - [Usage](#-usage)
+- [Project Structure](#-project-structure)
 - [Commands Reference](#-commands-reference)
 - [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
 - [Disclaimer](#-disclaimer)
 - [Credits](#-credits)
 
@@ -40,6 +42,7 @@
 - 📱 **Optimized for ARM64** - Built specifically for Android
 - 🔋 **Battery Friendly** - Customizable thread usage
 - 🚀 **One-Click Install** - Automated setup script
+- 📁 **Organized Structure** - Scripts, configs, and docs in separate folders
 
 ---
 
@@ -59,6 +62,6 @@
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/yourusername/verus-miner-termux.git
-cd verus-miner-termux
+git clone https://github.com/karolek13245/Verus-Miner.git
+cd Verus-Miner
 bash install.sh
