@@ -1,0 +1,195 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ═══════════════════════════════════════════════════════
+#  VERUS COIN MINER CONTROLLER v1.0
+#  Termux Design by @dendalion.hq 😼
+# ═══════════════════════════════════════════════════════
+
+# ─── Colors ──────────────────────────────────────────
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+GOLD='\033[38;5;220m'
+NC='\033[0m'
+
+# ─── Clear Screen ──────────────────────────────────
+clear
+
+# ─── VERUS COIN LOGO ──────────────────────────────
+echo -e "${GOLD}"
+echo "    ██╗   ██╗███████╗██████╗ ██╗   ██╗███████╗"
+echo "    ██║   ██║██╔════╝██╔══██╗██║   ██║██╔════╝"
+echo "    ██║   ██║█████╗  ██████╔╝██║   ██║███████╗"
+echo "    ╚██╗ ██╔╝██╔══╝  ██╔══██╗██║   ██║╚════██║"
+echo "     ╚████╔╝ ███████╗██║  ██║╚██████╔╝███████║"
+echo "      ╚═══╝  ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝"
+echo -e "${WHITE}"
+echo "    ╔══════════════════════════════════════════╗"
+echo "    ║         ${GREEN}VERUS COIN MINER${WHITE}             ║"
+echo "    ║         ${CYAN}Termux Controller v1.0${WHITE}        ║"
+echo "    ║      ${YELLOW}Jail break'd by @dendalion.hq 😼${WHITE}  ║"
+echo "    ╚══════════════════════════════════════════╝"
+echo -e "${NC}"
+
+# ─── System Status ────────────────────────────────
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}[+] System Status${NC}"
+echo -e "${WHITE}───────────────────────────────────────────────────────${NC}"
+
+# Check if miner is running
+if screen -ls 2>/dev/null | grep -q "miner"; then
+    MINER_STATUS="${GREEN}● RUNNING${NC}"
+    MINER_PID=$(screen -ls 2>/dev/null | grep miner | awk '{print $1}' | cut -d. -f1)
+    MINER_INFO="${GREEN}PID: $MINER_PID${NC}"
+else
+    MINER_STATUS="${RED}● STOPPED${NC}"
+    MINER_INFO="${RED}Not active${NC}"
+fi
+
+echo -e "   ${YELLOW}Miner Status  :${NC} $MINER_STATUS"
+echo -e "   ${YELLOW}Miner Info    :${NC} $MINER_INFO"
+echo -e "   ${YELLOW}CPU Cores     :${NC} $(nproc 2>/dev/null || echo "N/A")"
+echo -e "   ${YELLOW}Uptime        :${NC} $(uptime -p 2>/dev/null || echo "N/A")"
+echo -e "   ${YELLOW}Date          :${NC} $(date '+%Y-%m-%d %H:%M:%S')"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+
+# ─── MAIN MENU ──────────────────────────────────────
+echo -e "${GREEN}[+] Main Menu${NC}"
+echo -e "${WHITE}───────────────────────────────────────────────────────${NC}"
+echo -e "${BLUE}  ╔═════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}  ║${NC} ${GREEN}1)${NC} ⛏️  Start Mining                     ${BLUE}║${NC}"
+echo -e "${BLUE}  ║${NC} ${YELLOW}2)${NC} ⚙️  Settings (Edit Config)           ${BLUE}║${NC}"
+echo -e "${BLUE}  ║${NC} ${RED}3)${NC} 🛑  Stop Mining                     ${BLUE}║${NC}"
+echo -e "${BLUE}  ║${NC} ${PURPLE}4)${NC} 📊  View Miner Output             ${BLUE}║${NC}"
+echo -e "${BLUE}  ║${NC} ${CYAN}5)${NC} 🔄  Restart Miner                 ${BLUE}║${NC}"
+echo -e "${BLUE}  ║${NC} ${RED}0)${NC} ❌  Quit                           ${BLUE}║${NC}"
+echo -e "${BLUE}  ╚═════════════════════════════════════════════════╝${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+
+# ─── User Input ──────────────────────────────────────
+echo -en "${GREEN}└─[${WHITE}verus${GREEN}@${WHITE}miner${GREEN}]─[${YELLOW}~${GREEN}] > ${NC}"
+read -p "" choice
+
+case $choice in
+    1)
+        # ─── Start Mining ──────────────────────────
+        echo -e "${YELLOW}[*] Starting Verus Coin Miner...${NC}"
+        
+        if screen -ls 2>/dev/null | grep -q "miner"; then
+            echo -e "${RED}[!] Miner is already running!${NC}"
+        else
+            if [ -f ~/startup.sh ]; then
+                ~/startup.sh
+                sleep 2
+                echo -e "${GREEN}[+] Miner started successfully!${NC}"
+            else
+                echo -e "${RED}[!] Config file not found!${NC}"
+                echo -e "${YELLOW}Please run Settings (option 2) first.${NC}"
+            fi
+        fi
+        ;;
+    
+    2)
+        # ─── Settings ──────────────────────────────
+        echo -e "${YELLOW}[*] Opening Settings...${NC}"
+        
+        if [ ! -f ~/startup.sh ]; then
+            echo -e "${CYAN}[i] No config found. Creating template...${NC}"
+            cat > ~/startup.sh << 'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+POOL="stratum+tcp://na.luckpool.net:3956"
+WALLET="YOUR_WALLET_ADDRESS_HERE"
+WORKER="termux_miner"
+THREADS=4
+
+# Check for correct binary name
+if [ -f ~/ccminer/ccminer ]; then
+    MINER_BIN="~/ccminer/ccminer"
+else
+    echo "Miner binary not found at ~/ccminer/ccminer"
+    exit 1
+fi
+
+screen -dmS miner $MINER_BIN -a verus -o $POOL -u $WALLET.$WORKER -p x -t $THREADS
+echo "Miner started in screen session 'miner'"
+EOF
+            chmod +x ~/startup.sh
+        fi
+        
+        echo -e "${GREEN}[+] Config: ~/startup.sh${NC}"
+        echo -e "${YELLOW}────────────────────────────────────────${NC}"
+        echo -e "  ${WHITE}POOL${NC}     = Mining pool"
+        echo -e "  ${WHITE}WALLET${NC}   = Your VRSC address"
+        echo -e "  ${WHITE}WORKER${NC}   = Device name"
+        echo -e "  ${WHITE}THREADS${NC}  = CPU cores to use"
+        echo -e "${YELLOW}────────────────────────────────────────${NC}"
+        echo -e "${CYAN}[i] Editing with nano...${NC}"
+        echo -e "${YELLOW}Save: CTRL+X, Y, Enter${NC}"
+        sleep 2
+        nano ~/startup.sh
+        echo -e "${GREEN}[+] Settings saved!${NC}"
+        ;;
+    
+    3)
+        # ─── Stop Mining ────────────────────────────
+        echo -e "${YELLOW}[*] Stopping miner...${NC}"
+        if screen -ls 2>/dev/null | grep -q "miner"; then
+            screen -XS miner quit
+            sleep 1
+            echo -e "${GREEN}[+] Miner stopped!${NC}"
+        else
+            echo -e "${RED}[!] No miner running.${NC}"
+        fi
+        ;;
+    
+    4)
+        # ─── View Output ────────────────────────────
+        echo -e "${YELLOW}[*] Attaching to miner...${NC}"
+        echo -e "${CYAN}[i] Detach: CTRL+A then D${NC}"
+        echo -e "${CYAN}[i] Stop view: CTRL+C${NC}"
+        sleep 2
+        if screen -ls 2>/dev/null | grep -q "miner"; then
+            screen -r miner
+        else
+            echo -e "${RED}[!] No miner running.${NC}"
+        fi
+        ;;
+    
+    5)
+        # ─── Restart Miner ──────────────────────────
+        echo -e "${YELLOW}[*] Restarting miner...${NC}"
+        if screen -ls 2>/dev/null | grep -q "miner"; then
+            screen -XS miner quit
+            sleep 1
+        fi
+        if [ -f ~/startup.sh ]; then
+            ~/startup.sh
+            sleep 2
+            echo -e "${GREEN}[+] Miner restarted!${NC}"
+        else
+            echo -e "${RED}[!] Config not found! Run Settings first.${NC}"
+        fi
+        ;;
+    
+    0)
+        # ─── Quit ────────────────────────────────────
+        echo -e "${RED}[!] Exiting...${NC}"
+        echo -e "${YELLOW}Miner running in background.${NC}"
+        echo -e "${YELLOW}To stop: Run script -> option 3${NC}"
+        echo -e "${GREEN}Goodbye! 👋${NC}"
+        exit 0
+        ;;
+    
+    *)
+        echo -e "${RED}[!] Invalid option!${NC}"
+        ;;
+esac
+
+# ─── Return to Menu ──────────────────────────────────
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}[+] Press ENTER to return to menu...${NC}"
+read -p ""
+exec "$0"
