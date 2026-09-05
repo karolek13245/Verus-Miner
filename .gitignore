@@ -1,0 +1,43 @@
+# Compiled binaries (these are built on the user's device)
+ccminer
+ccminer-arm
+*.o
+*.so
+*.a
+
+# Temporary and log files
+*.log
+*.tmp
+*.keys.log
+screenshot.png
+keys.txt
+*.pid
+
+# Python cache (if any)
+__pycache__/
+*.pyc
+*.pyo
+
+# Termux specific
+.bash_history
+.termux/
+*.apk
+*.deb
+
+# Editor files (from nano, vim, etc.)
+*.swp
+*.swo
+*~
+.DS_Store
+*.bak
+
+# User's personal config (keep the example, ignore the actual)
+startup.sh
+!config/example_config.sh
+
+# Screen session files
+screenlog.0
+
+# Temporary downloads
+tmp/
+downloads/
